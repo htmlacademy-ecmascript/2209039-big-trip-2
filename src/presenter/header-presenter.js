@@ -1,6 +1,6 @@
 import { render, RenderPosition } from '../render.js';
-import Filters from '../view/filters.js';
-import TripInfo from '../view/trip-info.js';
+import Filters from '../view/filters-view.js';
+import TripInfo from '../view/trip-info-view.js';
 
 export default class HeaderPresenter {
   constructor ({ container }) {
