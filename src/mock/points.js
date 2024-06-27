@@ -35,3 +35,16 @@ export const points = [
     offers: [],
     type: 'ship'
   }];
+
+export const defaultPoint = [
+  {
+    id: '000',
+    basePrice: '000',
+    dateFrom: '2001-01-01T00:00:00.845Z',
+    dateTo: '2001-01-01T00:00:00.845Z',
+    destination: '',
+    isFavorite: false,
+    offers: [],
+    type: 'flight'
+  }
+];

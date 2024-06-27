@@ -17,16 +17,17 @@ export default class TripPresenter {
   init () {
     this.pointModel.init();
     const points = this.pointModel.getPoints();
-    const destionations = this.pointModel.getDestinations();
+    const destinations = this.pointModel.getDestinations();
     const offers = this.pointModel.getOffers();
+    const defaultPoint = this.pointModel.getDefaultPoint();
 
     render(new Sorting, this.container);
     render(this.tripList, this.container);
-    render(new EditForm(points[0], destionations, offers), this.tripList.getElement());
-    render(new CreateForm, this.tripList.getElement());
+    render(new EditForm(points[0], destinations, offers), this.tripList.getElement());
+    render(new CreateForm(defaultPoint[0], destinations, offers), this.tripList.getElement());
 
     points.forEach((point) => {
-      render(new TripPoint(point, destionations, offers), this.tripList.getElement());
+      render(new TripPoint(point, destinations, offers), this.tripList.getElement());
     });
   }
 }
