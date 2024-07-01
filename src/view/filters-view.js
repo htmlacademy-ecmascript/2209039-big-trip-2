@@ -1,6 +1,6 @@
 import { createElement } from '../render.js';
 
-const FILTERS_TYPES = ['Everything', 'Future', 'Present', 'Past'];
+const filtersTypes = ['Everything', 'Future', 'Present', 'Past'];
 
 const createFilterElement = (filterType) => `
   <div class="trip-filters__filter">
@@ -14,12 +14,12 @@ const createFilterTemplate = () => `
       <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything">
         <label class="trip-filters__filter-label" for="filter-everything">Everything</label>
     </div>
-    ${FILTERS_TYPES.map((filterType) => createFilterElement(filterType)).join('')}
+    ${filtersTypes.map((filterType) => createFilterElement(filterType)).join('')}
 
     <button class="visually-hidden" type="submit">Accept filter</button>
   </form>`;
 
-export default class Filters {
+export default class FiltersView {
   getTemplate () {
     return createFilterTemplate();
   }

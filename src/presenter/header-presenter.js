@@ -1,6 +1,6 @@
 import { render, RenderPosition } from '../render.js';
-import Filters from '../view/filters.js';
-import TripInfo from '../view/trip-info.js';
+import FiltersView from '../view/filters-view.js';
+import TripInfoView from '../view/trip-info-view.js';
 
 export default class HeaderPresenter {
   constructor ({ container }) {
@@ -8,10 +8,10 @@ export default class HeaderPresenter {
   }
 
   initInfo () {
-    render (new TripInfo, this.container, RenderPosition.AFTERBEGIN);
+    render (new TripInfoView, this.container, RenderPosition.AFTERBEGIN);
   }
 
   initFilters () {
-    render(new Filters, this.container);
+    render(new FiltersView, this.container);
   }
 }
