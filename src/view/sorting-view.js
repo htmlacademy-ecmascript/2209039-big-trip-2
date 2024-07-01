@@ -15,7 +15,7 @@ const createSortingTemplate = () => `
     ${sortingTypes.map((sortingType) => createSortingElement(sortingType)).join('')}
   </form>`;
 
-export default class Sorting {
+export default class SortingView {
   getTemplate () {
     return createSortingTemplate();
   }

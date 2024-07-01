@@ -19,7 +19,7 @@ const createFilterTemplate = () => `
     <button class="visually-hidden" type="submit">Accept filter</button>
   </form>`;
 
-export default class Filters {
+export default class FiltersView {
   getTemplate () {
     return createFilterTemplate();
   }

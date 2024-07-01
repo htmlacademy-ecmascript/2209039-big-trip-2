@@ -3,8 +3,8 @@ import { capitalize, humanizeDueDate, findDuration } from '../util.js';
 
 const dateFormat = {
   MMMD: 'MMM D',
-  Hmm: 'H:mm',
-  duration: 'duration'
+  HMM: 'H:mm',
+  DURATION: 'duration'
 };
 
 const createTripPointTemplate = (point, destionations, offers) => {
@@ -22,9 +22,9 @@ const createTripPointTemplate = (point, destionations, offers) => {
       <h3 class="event__title">${capitalize(point.type)} ${pointDestination}</h3>
       <div class="event__schedule">
         <p class="event__time">
-          <time class="event__start-time" datetime="${dateFrom}">${humanizeDueDate(dateFrom, dateFormat.Hmm)}</time>
+          <time class="event__start-time" datetime="${dateFrom}">${humanizeDueDate(dateFrom, dateFormat.HMM)}</time>
           &mdash;
-          <time class="event__end-time" datetime="${dateTo}">${humanizeDueDate(dateTo, dateFormat.Hmm)}</time>
+          <time class="event__end-time" datetime="${dateTo}">${humanizeDueDate(dateTo, dateFormat.HMM)}</time>
         </p>
         <p class="event__duration">${findDuration(dateTo, dateFrom)}</p>
       </div>
@@ -53,7 +53,7 @@ const createTripPointTemplate = (point, destionations, offers) => {
   </li>`;
 };
 
-export default class TripPoint {
+export default class TripPointView {
   constructor(points, destionations, offers) {
     this.points = points;
     this.destionations = destionations;

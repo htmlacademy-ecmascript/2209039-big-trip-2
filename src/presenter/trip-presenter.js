@@ -1,13 +1,13 @@
 import { render } from '../render.js';
-import CreateForm from '../view/create-form-view.js';
-import EditForm from '../view/edit-form-view.js';
-import Sorting from '../view/sorting-view.js';
-import TripList from '../view/trip-list-view.js';
-import TripPoint from '../view/trip-point-view.js';
+import CreateFormView from '../view/create-form-view.js';
+import EditFormView from '../view/edit-form-view.js';
+import SortingView from '../view/sorting-view.js';
+import TripListView from '../view/trip-list-view.js';
+import TripPointView from '../view/trip-point-view.js';
 import PointModel from '../model/point-model.js';
 
 export default class TripPresenter {
-  tripList = new TripList();
+  tripList = new TripListView();
 
   constructor ({ container, pointModel = new PointModel }) {
     this.container = container;
@@ -21,13 +21,13 @@ export default class TripPresenter {
     const offers = this.pointModel.getOffers();
     const defaultPoint = this.pointModel.getDefaultPoint();
 
-    render(new Sorting, this.container);
+    render(new SortingView, this.container);
     render(this.tripList, this.container);
-    render(new EditForm(points[0], destinations, offers), this.tripList.getElement());
-    render(new CreateForm(defaultPoint[0], destinations, offers), this.tripList.getElement());
+    render(new EditFormView(points[0], destinations, offers), this.tripList.getElement());
+    render(new CreateFormView(defaultPoint[0], destinations, offers), this.tripList.getElement());
 
     points.forEach((point) => {
-      render(new TripPoint(point, destinations, offers), this.tripList.getElement());
+      render(new TripPointView(point, destinations, offers), this.tripList.getElement());
     });
   }
 }

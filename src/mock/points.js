@@ -1,3 +1,5 @@
+import { toCamelCase } from '../util.js'
+
 export const points = [
   {
     id: 'f4b62099-293f-4c3d-a702-94eec4a2808c',
@@ -47,4 +49,4 @@ export const defaultPoint = [
     offers: [],
     type: 'flight'
   }
-];
+]

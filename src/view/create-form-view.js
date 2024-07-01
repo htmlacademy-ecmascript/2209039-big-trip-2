@@ -2,7 +2,7 @@ import { createElement } from '../render.js';
 import { capitalize, humanizeDueDate } from '../util.js';
 
 const dateFormat = {
-  fullDate: 'DD/MM/YY H:mm'
+  FULL_DATE: 'DD/MM/YY H:mm'
 };
 
 const createFormTemplate = (point, destinations, offers) => {
@@ -84,10 +84,10 @@ const createFormTemplate = (point, destinations, offers) => {
 
         <div class="event__field-group  event__field-group--time">
           <label class="visually-hidden" for="event-start-time-1">From</label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="${humanizeDueDate(dateFrom, dateFormat.fullDate)}" value="19/03/19 00:00">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="${humanizeDueDate(dateFrom, dateFormat.FULL_DATE)}" value="19/03/19 00:00">
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${humanizeDueDate(dateTo, dateFormat.fullDate)}">
+            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${humanizeDueDate(dateTo, dateFormat.FULL_DATE)}">
             </div>
 
             <div class="event__field-group  event__field-group--price">
@@ -137,7 +137,7 @@ const createFormTemplate = (point, destinations, offers) => {
                 </li>`;
 };
 
-export default class CreateForm {
+export default class CreateFormView {
   constructor(points, destinations, offers) {
     this.points = points;
     this.destinations = destinations;

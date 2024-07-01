@@ -2,7 +2,7 @@ import { createElement } from '../render.js';
 import { capitalize, humanizeDueDate } from '../util.js';
 
 const dateFormat = {
-  fullDate: 'DD/MM/YY H:mm'
+  FULL_DATE: 'DD/MM/YY H:mm'
 };
 
 const createEditFormTemplate = (point, destionations, offers) => {
@@ -85,10 +85,10 @@ const createEditFormTemplate = (point, destionations, offers) => {
 
         <div class="event__field-group  event__field-group--time">
           <label class="visually-hidden" for="event-start-time-1">From</label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${humanizeDueDate(dateFrom, dateFormat.fullDate)}">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${humanizeDueDate(dateFrom, dateFormat.FULL_DATE)}">
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${humanizeDueDate(dateTo, dateFormat.fullDate)}">
+            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${humanizeDueDate(dateTo, dateFormat.FULL_DATE)}">
             </div>
 
             <div class="event__field-group  event__field-group--price">
@@ -131,7 +131,7 @@ const createEditFormTemplate = (point, destionations, offers) => {
   </li>`;
 };
 
-export default class EditForm {
+export default class EditFormView {
   constructor(points, destionations, offers) {
     this.points = points;
     this.destionations = destionations;
