@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { capitalize, humanizeDueDate } from '../util.js';
 
 const dateFormat = {
@@ -137,26 +137,15 @@ const createFormTemplate = (point, destinations, offers) => {
                 </li>`;
 };
 
-export default class CreateFormView {
+export default class CreateFormView extends AbstractView {
   constructor(points, destinations, offers) {
+    super();
     this.points = points;
     this.destinations = destinations;
     this.offers = offers;
   }
 
-  getTemplate () {
+  get template () {
     return createFormTemplate(this.points, this.destinations, this.offers);
-  }
-
-  getElement () {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-
-      return this.element;
-    }
-  }
-
-  removeElement () {
-    this.element = null;
   }
 }
