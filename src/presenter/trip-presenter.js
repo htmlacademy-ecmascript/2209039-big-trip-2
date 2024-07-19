@@ -1,4 +1,4 @@
-import { render } from '../framework/render.js';
+import { render, replace } from '../framework/render.js';
 import CreateFormView from '../view/create-form-view.js';
 import EditFormView from '../view/edit-form-view.js';
 import SortingView from '../view/sorting-view.js';
@@ -25,11 +25,47 @@ export default class TripPresenter {
 
     render(new SortingView, this.#container);
     render(this.#tripList, this.#container);
-    render(new EditFormView(points[0], destinations, offers), this.#tripList.element);
+    // render(new EditFormView(points[0], destinations, offers), this.#tripList.element);
     render(new CreateFormView(defaultPoint[0], destinations, offers), this.#tripList.element);
+    points.forEach((point) => this.#renderPoint(point, destinations, offers));
 
-    points.forEach((point) => {
-      render(new TripPointView(point, destinations, offers), this.#tripList.element);
-    });
+  }
+
+  #renderPoint(point, destination, offer) {
+    const escKeyDownHanlder = (evt) => {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        replaceFormToPoint();
+      }
+    };
+
+    const tripPoint = new TripPointView(point, destination, offer,
+      { onEditClick: () => {
+        replacePointToForm();
+        document.addEventListener('keydown', escKeyDownHanlder);
+      } }
+    );
+
+    const editTripForm = new EditFormView(point, destination, offer,
+      { onEditClick: () => {
+        replaceFormToPoint();
+      } },
+      { onFormSubmit: () => {
+        replaceFormToPoint();
+      }
+
+      }
+    );
+
+    function replacePointToForm() {
+      replace(editTripForm, tripPoint);
+    }
+
+    function replaceFormToPoint() {
+      replace(tripPoint, editTripForm);
+      document.removeEventListener('keydown', escKeyDownHanlder);
+    }
+
+    render(tripPoint, this.#tripList.element);
   }
 }

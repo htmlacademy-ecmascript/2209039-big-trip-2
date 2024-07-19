@@ -132,14 +132,34 @@ const createEditFormTemplate = (point, destionations, offers) => {
 };
 
 export default class EditFormView extends AbstractView {
-  constructor(points, destionations, offers) {
+  #handleFormSubmit;
+  #handleClick;
+
+  constructor(points, destionations, offers, { onEditClick }, { onFormSubmit }) {
     super();
     this.points = points;
     this.destionations = destionations;
     this.offers = offers;
+    this.#handleFormSubmit = onFormSubmit;
+    this.#handleClick = onEditClick;
+    this.element.querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#clickHandler);
+
+    this.element.querySelector('form')
+      .addEventListener('submit', this.#formSubmitHandler);
   }
 
   get template() {
     return createEditFormTemplate(this.points, this.destionations, this.offers);
   }
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
+
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleClick();
+  };
 }
