@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { capitalize, humanizeDueDate } from '../util.js';
 
 const dateFormat = {
@@ -131,26 +131,35 @@ const createEditFormTemplate = (point, destionations, offers) => {
   </li>`;
 };
 
-export default class EditFormView {
-  constructor(points, destionations, offers) {
+export default class EditFormView extends AbstractView {
+  #handleFormSubmit;
+  #handleClick;
+
+  constructor(points, destionations, offers, { onEditClick }, { onFormSubmit }) {
+    super();
     this.points = points;
     this.destionations = destionations;
     this.offers = offers;
+    this.#handleFormSubmit = onFormSubmit;
+    this.#handleClick = onEditClick;
+    this.element.querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#clickHandler);
+
+    this.element.querySelector('form')
+      .addEventListener('submit', this.#formSubmitHandler);
   }
 
-  getTemplate() {
+  get template() {
     return createEditFormTemplate(this.points, this.destionations, this.offers);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
 
-      return this.element;
-    }
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleClick();
+  };
 }
