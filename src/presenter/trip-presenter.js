@@ -25,7 +25,6 @@ export default class TripPresenter {
 
     render(new SortingView, this.#container);
     render(this.#tripList, this.#container);
-    // render(new EditFormView(points[0], destinations, offers), this.#tripList.element);
     render(new CreateFormView(defaultPoint[0], destinations, offers), this.#tripList.element);
     points.forEach((point) => this.#renderPoint(point, destinations, offers));
 
@@ -36,6 +35,7 @@ export default class TripPresenter {
       if (evt.key === 'Escape') {
         evt.preventDefault();
         replaceFormToPoint();
+        document.removeEventListener('keydown', escKeyDownHanlder);
       }
     };
 
@@ -63,7 +63,6 @@ export default class TripPresenter {
 
     function replaceFormToPoint() {
       replace(tripPoint, editTripForm);
-      document.removeEventListener('keydown', escKeyDownHanlder);
     }
 
     render(tripPoint, this.#tripList.element);
