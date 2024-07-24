@@ -4,6 +4,7 @@ import EditFormView from '../view/edit-form-view.js';
 import SortingView from '../view/sorting-view.js';
 import TripListView from '../view/trip-list-view.js';
 import TripPointView from '../view/trip-point-view.js';
+import ListEmptyView from '../view/list-empty-view.js';
 import PointModel from '../model/point-model.js';
 
 export default class TripPresenter {
@@ -25,6 +26,10 @@ export default class TripPresenter {
 
     render(new SortingView, this.#container);
     render(this.#tripList, this.#container);
+    if (points.length === 0) {
+      render(new ListEmptyView, this.#container);
+    }
+
     render(new CreateFormView(defaultPoint[0], destinations, offers), this.#tripList.element);
     points.forEach((point) => this.#renderPoint(point, destinations, offers));
 

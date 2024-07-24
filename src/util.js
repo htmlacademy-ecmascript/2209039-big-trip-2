@@ -22,7 +22,21 @@ const findDuration = (date1, date2) => {
   return `${Math.floor(minutesDuration)}H`;
 };
 
+const checkPastPoints = (points) => {
+  const dates = points.map((point) => point.dateTo);
+  if (dates.some((date) => dayjs(date).diff(dayjs() < 0))) {
+    return 'disabled';
+  }
+};
+
+const checkPresentPoints = (points) => {
+  if (!(points.some((point) => (dayjs(point.dateFrom).isBefore(dayjs()) &&
+  dayjs(point.dateTo).isAfter(dayjs()))))) {
+    return 'disabled';
+  }
+};
+
 const toCamelCase = (str) => lodash.camelCase(str);
 
 
-export { humanizeDueDate, capitalize, findDuration, toCamelCase };
+export { humanizeDueDate, capitalize, findDuration, toCamelCase, checkPastPoints, checkPresentPoints };

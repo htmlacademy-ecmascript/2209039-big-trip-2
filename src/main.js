@@ -10,6 +10,6 @@ const tripSectionPresenter = new TripPresenter({container: tripSection});
 const tripInfoPresenter = new HeaderPresenter({container: headerContainer});
 const filtersPresenter = new HeaderPresenter({ container: filtersContainer });
 
-tripSectionPresenter.init();
-filtersPresenter.initFilters();
 tripInfoPresenter.initInfo();
+filtersPresenter.initFilters();
+tripSectionPresenter.init();

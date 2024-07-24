@@ -1,17 +1,24 @@
 import { render, RenderPosition } from '../framework/render.js';
 import FiltersView from '../view/filters-view.js';
 import TripInfoView from '../view/trip-info-view.js';
+import PointModel from '../model/point-model.js';
 
 export default class HeaderPresenter {
-  constructor ({ container }) {
-    this.container = container;
+  #pointModel;
+  #container;
+
+  constructor ({ container, pointModel = new PointModel }) {
+    this.#container = container;
+    this.#pointModel = pointModel;
   }
 
   initInfo () {
-    render (new TripInfoView, this.container, RenderPosition.AFTERBEGIN);
+    render (new TripInfoView, this.#container, RenderPosition.AFTERBEGIN);
   }
 
   initFilters () {
-    render(new FiltersView, this.container);
+    this.#pointModel.init();
+    const points = this.#pointModel.points;
+    render(new FiltersView(points), this.#container);
   }
 }
