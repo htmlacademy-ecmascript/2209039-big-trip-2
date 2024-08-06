@@ -14,6 +14,7 @@ const createEventDateTemplate = (point) => {
 };
 
 const createEventTypeTemplate = (point, destionations) => {
+
   const { type } = point;
   const pointDestination = destionations.find((destination) => destination.id === point.destination).name;
 
