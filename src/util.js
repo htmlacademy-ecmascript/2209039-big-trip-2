@@ -38,5 +38,7 @@ const checkPresentPoints = (points) => {
 
 const toCamelCase = (str) => lodash.camelCase(str);
 
+const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
 
-export { humanizeDueDate, capitalize, findDuration, toCamelCase, checkPastPoints, checkPresentPoints };
+
+export { humanizeDueDate, capitalize, findDuration, toCamelCase, checkPastPoints, checkPresentPoints, updateItem };
