@@ -20,7 +20,7 @@ export default class PointPresenter {
     const escKeyDownHanlder = (evt) => {
       if (evt.key === 'Escape') {
         evt.preventDefault();
-        replaceFormToPoint();
+        this.#replaceFormToPoint();
         document.removeEventListener('keydown', escKeyDownHanlder);
       }
     };
@@ -28,7 +28,7 @@ export default class PointPresenter {
     this.#tripPoint = new TripPointView(point, destination, offer,
       {
         onEditClick: () => {
-          replacePointToForm();
+          this.#replacePointToForm();
           document.addEventListener('keydown', escKeyDownHanlder);
         }
       },
@@ -38,12 +38,12 @@ export default class PointPresenter {
     this.#editTripForm = new EditFormView(point, destination, offer,
       {
         onEditClick: () => {
-          replaceFormToPoint();
+          this.#replaceFormToPoint();
         }
       },
       {
         onFormSubmit: () => {
-          replaceFormToPoint();
+          this.#replaceFormToPoint();
         }
 
       }
@@ -56,25 +56,28 @@ export default class PointPresenter {
 
     if (this.#tripList.element.contains(prevTripPoint.element)) {
       replace(this.#tripPoint, prevTripPoint);
+      return;
     }
 
     if (this.#tripList.element.contains(prevEditTripForm.element)) {
       replace(this.#tripPoint, prevEditTripForm);
+      return;
     }
 
     remove(prevTripPoint);
     remove(prevEditTripForm);
 
-    function replacePointToForm() {
-      replace(this.#editTripForm, this.#tripPoint);
-    }
-
-    function replaceFormToPoint() {
-      replace(this.#tripPoint, this.#editTripForm);
-    }
-
     render(this.#tripPoint, this.#tripList.element);
   }
+
+  #replacePointToForm() {
+    replace(this.#editTripForm, this.#tripPoint);
+  }
+
+  #replaceFormToPoint() {
+    replace(this.#tripPoint, this.#editTripForm);
+  }
+
 
   destroy() {
     remove(this.#tripPoint);
@@ -82,7 +85,7 @@ export default class PointPresenter {
   }
 
   #handleFavoriteClick = () => {
-    this.#handleStatusChange({...this.#tripPoint, isFavorite: !this.#tripPoint.isFavorite});
+    this.#handleStatusChange({...this.#tripPoint, points: {...this.#tripPoint.points, isFavorite: !this.#tripPoint.points.isFavorite}});
   };
 }
 

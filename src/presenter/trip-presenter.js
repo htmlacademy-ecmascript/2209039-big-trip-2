@@ -41,7 +41,6 @@ export default class TripPresenter {
   }
 
   #handleFavStatusChange = (updatedPoint, destination = this.#destinations, offer = this.#offers) => {
-    debugger
     this.#points = updateItem(this.#points, updatedPoint.points);
     this.#pointPresenters.get(updatedPoint.points.id).init(updatedPoint.points, destination, offer);
 
