@@ -40,6 +40,10 @@ export default class TripPresenter {
 
   }
 
+  #handleModeChange = () => {
+    this.#pointPresenters.forEach((presenter) => presenter.resetPointView());
+  };
+
   #handleFavStatusChange = (updatedPoint, destination = this.#destinations, offer = this.#offers) => {
     this.#points = updateItem(this.#points, updatedPoint.points);
     this.#pointPresenters.get(updatedPoint.points.id).init(updatedPoint.points, destination, offer);
@@ -49,7 +53,8 @@ export default class TripPresenter {
   #renderPoint(point, destination, offer) {
     const pointPresenter = new PointPresenter({
       tripList: this.#tripList,
-      onStatusChange: this.#handleFavStatusChange });
+      onStatusChange: this.#handleFavStatusChange,
+      onModeChange: this.#handleModeChange });
 
     pointPresenter.init(point, destination, offer);
     this.#pointPresenters.set(point.id, pointPresenter);
