@@ -82,7 +82,7 @@ export default class TripPointView extends AbstractView {
   #onEditClick;
   #handleFavoriteClick;
 
-  constructor(points, destinations, offers, {onEditClick}, {onFavoriteClick}) {
+  constructor(points, destinations, offers, {onEditClick, onFavoriteClick}) {
     super();
     this.points = points;
     this.destinations = destinations;
