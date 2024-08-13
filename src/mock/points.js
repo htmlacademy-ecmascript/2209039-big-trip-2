@@ -36,6 +36,16 @@ export const points = [
     isFavorite: false,
     offers: [],
     type: 'ship'
+  },
+  {
+    id: 'f4b62099-293f-4c3d-a702-94eec4a2808f',
+    basePrice: 11100,
+    dateFrom: '2025-08-14T12:55:56.845Z',
+    dateTo: '2025-08-15T14:22:13.375Z',
+    destination: 'bfa5cb75-a1fe-4b77-a83c-0e528e910e06',
+    isFavorite: false,
+    offers: [],
+    type: 'flight'
   }];
 
 export const defaultPoint = [

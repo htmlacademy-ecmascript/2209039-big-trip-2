@@ -13,9 +13,10 @@ const createEventDateTemplate = (point) => {
   return `<time class="event__date" datetime="${dateFrom}">${humanizeDueDate(dateFrom, dateFormat.MMMD)}</time>`;
 };
 
-const createEventTypeTemplate = (point, destionations) => {
+const createEventTypeTemplate = (point, destinations) => {
+
   const { type } = point;
-  const pointDestination = destionations.find((destination) => destination.id === point.destination).name;
+  const pointDestination = destinations.find((destination) => destination.id === point.destination).name;
 
   return `
     <div class="event__type">
@@ -67,36 +68,45 @@ const createEditFormBtnTemplate = () => `
     <span class="visually-hidden">Open event</span>
   </button>`;
 
-const createTripPointTemplate = (point, destionations, offers) =>
+const createTripPointTemplate = (point, destinations, offers) =>
   `<li class="trip-events__item">
     <div class="event">
     ${createEventDateTemplate(point)}
-    ${createEventTypeTemplate(point, destionations)}
+    ${createEventTypeTemplate(point, destinations)}
     ${createScheduleTemplate(point)}
     ${createEventPriceTemplate(point, offers)}
     ${createEditFormBtnTemplate()}
     </div>
   </li>`;
 export default class TripPointView extends AbstractView {
-  #handleClick;
+  #onEditClick;
+  #handleFavoriteClick;
 
-  constructor(points, destionations, offers, {onEditClick}) {
+  constructor(points, destinations, offers, {onEditClick}, {onFavoriteClick}) {
     super();
     this.points = points;
-    this.destionations = destionations;
+    this.destinations = destinations;
     this.offers = offers;
-    this.#handleClick = onEditClick;
+    this.#onEditClick = onEditClick;
+    this.#handleFavoriteClick = onFavoriteClick;
     this.element.querySelector('.event__rollup-btn')
       .addEventListener('click', this.#clickHandler);
+    this.element.querySelector('.event__favorite-btn')
+      .addEventListener('click', this.#favoriteClickHandler);
   }
 
   get template() {
 
-    return createTripPointTemplate(this.points, this.destionations, this.offers);
+    return createTripPointTemplate(this.points, this.destinations, this.offers);
   }
 
   #clickHandler = (evt) => {
     evt.preventDefault();
-    this.#handleClick();
+    this.#onEditClick();
+  };
+
+  #favoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFavoriteClick();
   };
 }
