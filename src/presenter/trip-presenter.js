@@ -6,7 +6,7 @@ import ListEmptyView from '../view/list-empty-view.js';
 import PointModel from '../model/point-model.js';
 import PointPresenter from './point-presenter.js';
 import { updateItem, sortPointsByDay, findSortingDuration } from '../util.js';
-import { SortingTypes } from '../const.js';
+import { SortingType } from '../const.js';
 
 
 export default class TripPresenter {
@@ -18,7 +18,7 @@ export default class TripPresenter {
   #destinations;
   #offers;
   #sortingComponent;
-  #currentSortingType = SortingTypes.PRICE;
+  #currentSortingType = SortingType.PRICE;
   #sourcedPointsOrder = [];
 
   constructor ({ container, pointModel = new PointModel }) {
@@ -60,13 +60,13 @@ export default class TripPresenter {
 
   #sortPoints(sortingType) {
     switch (sortingType) {
-      case SortingTypes.DAY:
+      case SortingType.DAY:
         this.#points.sort(sortPointsByDay);
         break;
-      case SortingTypes.PRICE:
+      case SortingType.PRICE:
         this.#points.sort((pointA, pointB) => pointA.basePrice - pointB.basePrice);
         break;
-      case SortingTypes.TIME:
+      case SortingType.TIME:
 
         this.#points.sort((pointA, pointB) => findSortingDuration(pointA) - findSortingDuration(pointB));
         break;
@@ -82,7 +82,6 @@ export default class TripPresenter {
     }
     this.#sortPoints(sortingType);
     this.#clearPointList();
-    this.#renderSorting();
 
     this.#points.forEach((point) => this.#renderPoint(point, this.#destinations, this.#offers));
   }

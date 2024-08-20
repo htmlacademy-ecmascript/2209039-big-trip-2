@@ -1,8 +1,6 @@
-import { SortingTypes } from '../const.js';
+import { SortingType } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
 import { capitalize } from '../util.js';
-
-// const findCheckedElement = (element) => element === 'day' ? 'checked' : '';
 
 const createSortingElement = (sortingType) => `
   <div class="trip-sort__item  trip-sort__item--${sortingType}">
@@ -15,7 +13,7 @@ const createSortingElement = (sortingType) => `
 
 const createSortingTemplate = () => `
   <form class="trip-events__trip-sort  trip-sort" action="#" method="get">
-    ${Object.values(SortingTypes).map((sortingType) => createSortingElement(sortingType)).join('')}
+    ${Object.values(SortingType).map((sortingType) => createSortingElement(sortingType)).join('')}
   </form>`;
 
 export default class SortingView extends AbstractView{
@@ -24,7 +22,7 @@ export default class SortingView extends AbstractView{
   constructor ({onSortTypeChange}) {
     super();
     this.#handleSortTypeChange = onSortTypeChange;
-    this.element.addEventListener('click', this.#sortTypeChangeHandler);
+    this.element.addEventListener('change', this.#sortTypeChangeHandler);
   }
 
   get template () {
@@ -32,11 +30,6 @@ export default class SortingView extends AbstractView{
   }
 
   #sortTypeChangeHandler = (evt) => {
-    if (evt.target.tagName !== 'INPUT') {
-      return;
-    }
-
-    evt.preventDefault();
     this.#handleSortTypeChange(evt.target.dataset.sortType);
   };
 }
