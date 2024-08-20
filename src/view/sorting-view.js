@@ -2,11 +2,11 @@ import { SortingTypes } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
 import { capitalize } from '../util.js';
 
-const findCheckedElement = (element) => element === 'price' ? 'checked' : '';
+// const findCheckedElement = (element) => element === 'day' ? 'checked' : '';
 
 const createSortingElement = (sortingType) => `
   <div class="trip-sort__item  trip-sort__item--${sortingType}">
-    <input id="sort-${sortingType}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-${sortingType}" ${findCheckedElement(sortingType)}
+    <input id="sort-${sortingType}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-${sortingType}"
       data-sort-type="${sortingType}"
     ${sortingType === 'event' ? 'disabled' : ''}
     ${sortingType === 'offers' ? 'disabled' : ''}>

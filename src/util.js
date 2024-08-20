@@ -5,8 +5,10 @@ const humanizeDueDate = (dueDate, dateFormat) => dueDate ? dayjs(dueDate).format
 
 const capitalize = (str) => str[0].toUpperCase() + str.slice(1);
 
-const findDuration = (date1, date2) => {
-  let minutesDuration = dayjs(date1).diff(dayjs(date2), 'm');
+const findSortingDuration = (point) => dayjs(point.dateTo).diff(dayjs(point.dateFrom), 'm');
+
+const findDuration = (point) => {
+  let minutesDuration = findSortingDuration(point);
   const minutesAfterHours = minutesDuration % 60;
 
   if (minutesDuration >= 60 && minutesAfterHours !== 0) {
@@ -62,14 +64,4 @@ const sortPointsByDay = (pointA, pointB) => {
   return weight ?? dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom));
 };
 
-const sortPointsByPrice = (pointA, pointB) => getWeightForDate(pointA.basPrice, pointB.basPrice);
-
-const sortPointsByTime = (pointA, pointB) => {
-  pointA = findDuration(pointA.dateFrom, pointA.dateTo);
-  pointB = findDuration(pointB.dateFrom, pointB.dateTo);
-
-  return getWeightForDate(pointA, pointB);
-};
-
-
-export { humanizeDueDate, capitalize, findDuration, toCamelCase, checkPastPoints, checkPresentPoints, updateItem, sortPointsByDay, sortPointsByPrice, sortPointsByTime };
+export { humanizeDueDate, capitalize, findDuration, toCamelCase, checkPastPoints, checkPresentPoints, updateItem, sortPointsByDay, findSortingDuration };
