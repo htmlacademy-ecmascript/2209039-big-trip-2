@@ -30,18 +30,15 @@ export default class PointPresenter {
         onEditClick: () => {
           this.#replacePointToForm();
           document.addEventListener('keydown', this.#escKeyDownHanlder);
-        }
-      },
-      { onFavoriteClick: this.#handleFavoriteClick }
+        },
+        onFavoriteClick: this.#handleFavoriteClick }
     );
 
     this.#editTripForm = new EditFormView(point, destination, offer,
       {
         onEditClick: () => {
           this.#replaceFormToPoint();
-        }
-      },
-      {
+        },
         onFormSubmit: () => {
           this.#replaceFormToPoint();
         }

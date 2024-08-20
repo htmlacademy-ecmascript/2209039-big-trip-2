@@ -5,8 +5,10 @@ const humanizeDueDate = (dueDate, dateFormat) => dueDate ? dayjs(dueDate).format
 
 const capitalize = (str) => str[0].toUpperCase() + str.slice(1);
 
-const findDuration = (date1, date2) => {
-  let minutesDuration = dayjs(date1).diff(dayjs(date2), 'm');
+const findSortingDuration = (point) => dayjs(point.dateTo).diff(dayjs(point.dateFrom), 'm');
+
+const findDuration = (point) => {
+  let minutesDuration = findSortingDuration(point);
   const minutesAfterHours = minutesDuration % 60;
 
   if (minutesDuration >= 60 && minutesAfterHours !== 0) {
@@ -40,5 +42,26 @@ const toCamelCase = (str) => lodash.camelCase(str);
 
 const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
 
+const getWeightForDate = (dateA, dateB) => {
+  if (dateA === null && dateB === 0) {
+    return 0;
+  }
 
-export { humanizeDueDate, capitalize, findDuration, toCamelCase, checkPastPoints, checkPresentPoints, updateItem };
+  if (dateA === null) {
+    return 1;
+  }
+
+  if (dateB === null) {
+    return -1;
+  }
+
+  return null;
+};
+
+const sortPointsByDay = (pointA, pointB) => {
+  const weight = getWeightForDate(pointA.dateFrom, pointB.dateFrom);
+
+  return weight ?? dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom));
+};
+
+export { humanizeDueDate, capitalize, findDuration, toCamelCase, checkPastPoints, checkPresentPoints, updateItem, sortPointsByDay, findSortingDuration };
