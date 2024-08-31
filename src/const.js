@@ -5,4 +5,16 @@ const SortingType = {
   PRICE: 'price',
   OFFERS: 'offers'};
 
-export {SortingType};
+const EventType = {
+  BUS: 'bus',
+  TAXI: 'taxi',
+  TRAIN : 'train',
+  SHIP: 'ship',
+  DRIVE: 'drive',
+  FLIGHT: 'flight',
+  CHECKIN: 'check-in',
+  SIGHTSEEING: 'sightseeing',
+  RESTAURANT: 'restaurant'
+};
+
+export {SortingType, EventType};

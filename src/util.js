@@ -64,4 +64,15 @@ const sortPointsByDay = (pointA, pointB) => {
   return weight ?? dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom));
 };
 
-export { humanizeDueDate, capitalize, findDuration, toCamelCase, checkPastPoints, checkPresentPoints, updateItem, sortPointsByDay, findSortingDuration };
+const putPicures = (destination) => {
+  if (destination.pictures) {
+    return `
+      <div class="event__photos-container">
+        <div class="event__photos-tape">
+        ${destination.pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`)}
+        </div>
+      </div>`;
+  }
+};
+
+export { humanizeDueDate, capitalize, findDuration, toCamelCase, checkPastPoints, checkPresentPoints, updateItem, sortPointsByDay, findSortingDuration, putPicures };

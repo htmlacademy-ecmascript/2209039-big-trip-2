@@ -44,7 +44,6 @@ export default class TripPresenter {
     // render(new CreateFormView(defaultPoint[0], destinations, offers), this.#tripList.element);
 
     this.#points.forEach((point) => this.#renderPoint(point, this.#destinations, this.#offers));
-
   }
 
   #handleModeChange = () => {
@@ -55,7 +54,6 @@ export default class TripPresenter {
     this.#points = updateItem(this.#points, updatedPoint.points);
     this.#sourcedPointsOrder = updateItem(this.#sourcedPointsOrder, updatedPoint.points);
     this.#pointPresenters.get(updatedPoint.points.id).init(updatedPoint.points, destination, offer);
-
   };
 
   #sortPoints(sortingType) {
@@ -95,6 +93,7 @@ export default class TripPresenter {
   }
 
   #renderPoint(point, destination, offer) {
+
     const pointPresenter = new PointPresenter({
       tripList: this.#tripList,
       onStatusChange: this.#handleFavStatusChange,
