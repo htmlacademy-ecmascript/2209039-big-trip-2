@@ -95,7 +95,6 @@ export default class PointPresenter {
 
   resetPointView() {
     if (this.#mode !== Mode.DEFAULT) {
-      this.#editTripForm.reset(this.#tripPoint);
       this.#replaceFormToPoint();
     }
   }
