@@ -1,9 +1,20 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { capitalize, humanizeDueDate, putPicures } from '../util.js';
+import { capitalize, humanizeDueDate} from '../util.js';
 import { EventType } from '../const.js';
 
 const dateFormat = {
   FULL_DATE: 'DD/MM/YY H:mm'
+};
+
+const createPictures = (destination) => {
+  if (destination.pictures) {
+    return `
+      <div class="event__photos-container">
+        <div class="event__photos-tape">
+        ${destination.pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`)}
+        </div>
+      </div>`;
+  }
 };
 
 const createEditFormTemplate = (point, destinations, offers) => {
@@ -69,7 +80,7 @@ const createEditFormTemplate = (point, destinations, offers) => {
           </header>
           <section class="event__details">
             <section class="event__section  event__section--offers">
-              <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+              ${offersByType.length ? '<h3 class="event__section-title  event__section-title--offers">Offers</h3>' : ''}
 
               <div class="event__available-offers">
               ${offersByType.map((offer) => `
@@ -87,7 +98,7 @@ const createEditFormTemplate = (point, destinations, offers) => {
             <section class="event__section  event__section--destination">
               <h3 class="event__section-title  event__section-title--destination">Destination</h3>
               <p class="event__destination-description">${destinationDescription}</p>
-              ${putPicures(pointDestination)}
+              ${createPictures(pointDestination)}
             </section>
           </section>
     </form>
