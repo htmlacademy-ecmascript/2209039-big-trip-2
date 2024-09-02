@@ -81,8 +81,8 @@ export default class PointPresenter {
     this.#mode = Mode.EDITING;
   }
 
-  #replaceFormToPoint() {
-    replace(this.#tripPoint, this.#editTripForm);
+  #replaceFormToPoint(point = this.#tripPoint) {
+    replace(point, this.#editTripForm);
     document.removeEventListener('keydown', this.#escKeyDownHanlder);
     this.#mode = Mode.DEFAULT;
   }
