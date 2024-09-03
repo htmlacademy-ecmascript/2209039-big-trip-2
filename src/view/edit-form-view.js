@@ -1,6 +1,9 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { capitalize, humanizeDueDate} from '../util.js';
 import { EventType } from '../const.js';
+import flatpickr from 'flatpickr';
+
+import 'flatpickr/dist/flatpickr.min.css';
 
 const dateFormat = {
   FULL_DATE: 'DD/MM/YY H:mm'
@@ -109,6 +112,8 @@ export default class EditFormView extends AbstractStatefulView {
   #handleFormSubmit;
   #handleClick;
   #destinations;
+  #datepickerFrom;
+  #datepickerTo;
 
   constructor(points, destinations, offers, { onEditClick, onFormSubmit }) {
     super();
@@ -134,6 +139,8 @@ export default class EditFormView extends AbstractStatefulView {
       .addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__input--destination')
       .addEventListener('change', this.#destinationChangeHandler);
+
+    this.#setDatepicker();
   }
 
   #formSubmitHandler = (evt) => {
@@ -145,6 +152,47 @@ export default class EditFormView extends AbstractStatefulView {
     evt.preventDefault();
     this.#handleClick();
   };
+
+  #dateFromChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateFrom: userDate
+    });
+  };
+
+  #dateToChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateTo: userDate
+    });
+  };
+
+  #setDatepicker() {
+    this.#datepickerFrom = flatpickr(
+      this.element.querySelector('.event__input--time[name=event-start-time]'),
+      {
+        dateFormat: 'd/m/y H:m',
+        enableTime: true,
+        /* eslint-disable */
+        time_24hr: true,
+        /* eslint-enable */
+        defaultDate: this._state.dateFrom,
+        onChange: this.#dateFromChangeHandler
+      }
+    );
+
+    this.#datepickerTo = flatpickr(
+      this.element.querySelector('.event__input--time[name=event-end-time]'),
+      {
+        dateFormat: 'd/m/y H:m',
+        enableTime: true,
+        /* eslint-disable */
+        time_24hr: true,
+        /* eslint-enable */
+        defaultDate: this._state.dateTo,
+        minDate: this._state.dateFrom,
+        onChange: this.#dateToChangeHandler
+      }
+    );
+  }
 
   static parsePointToState(point) {
     return {...point};
@@ -167,6 +215,15 @@ export default class EditFormView extends AbstractStatefulView {
       destination: this.#destinations.find((destination) => destination.name === evt.target.value).id
     });
   };
+
+  removeElement() {
+    super.removeElement();
+
+    if(this.#datepickerFrom) {
+      this.#datepickerFrom.destroy();
+      this.#datepickerFrom = null;
+    }
+  }
 
   reset(point) {
     this.updateElement(
