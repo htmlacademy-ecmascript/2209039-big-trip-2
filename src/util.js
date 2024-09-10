@@ -64,4 +64,7 @@ const sortPointsByDay = (pointA, pointB) => {
   return weight ?? dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom));
 };
 
-export { humanizeDueDate, capitalize, findDuration, toCamelCase, checkPastPoints, checkPresentPoints, updateItem, sortPointsByDay, findSortingDuration };
+const isDateEqual = (dateA, dateB) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
+
+export { humanizeDueDate, capitalize, findDuration, toCamelCase, checkPastPoints, checkPresentPoints,
+  updateItem, sortPointsByDay, findSortingDuration, isDateEqual };
