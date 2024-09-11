@@ -60,6 +60,7 @@ export default class PointPresenter {
 
     if(this.#mode === Mode.EDITING) {
       replace(this.#tripPoint, prevEditTripForm);
+      this.#mode = Mode.DEFAULT;
       return;
     }
 
