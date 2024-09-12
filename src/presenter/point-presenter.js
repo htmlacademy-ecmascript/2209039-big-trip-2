@@ -41,8 +41,8 @@ export default class PointPresenter {
         onEditClick: () => {
           this.#replaceFormToPoint();
         },
-        onFormSubmit: () => {
-          this.#handleFormSubmit(point);
+        onFormSubmit: (newPoint) => {
+          this.#handleFormSubmit(newPoint);
         }
 
       }
