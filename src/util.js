@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import lodash from 'lodash';
+import { FilterType } from './const.js';
 
 const humanizeDueDate = (dueDate, dateFormat) => dueDate ? dayjs(dueDate).format(dateFormat) : '';
 
@@ -66,5 +67,12 @@ const sortPointsByDay = (pointA, pointB) => {
 
 const isDateEqual = (dateA, dateB) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
 
+const filter = {
+  [FilterType.EVERYTHING]: (points) => points,
+  [FilterType.FUTURE]: (points) => points.filter((point) => dayjs(point.dateFrom).diff(dayjs() < 0)),
+  [FilterType.PAST]: (points) => points.filter((point) => dayjs(point.dateTo).diff(dayjs() > 0)),
+  [FilterType.PRESENT]: (points) => points.filter((point) => dayjs(point.dateFrom).diff(dayjs() > 0) && dayjs(point.dateTo).diff(dayjs() < 0))
+};
+
 export { humanizeDueDate, capitalize, findDuration, toCamelCase, checkPastPoints, checkPresentPoints,
-  updateItem, sortPointsByDay, findSortingDuration, isDateEqual };
+  updateItem, sortPointsByDay, findSortingDuration, isDateEqual, filter };

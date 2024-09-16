@@ -5,7 +5,7 @@ import TripListView from '../view/trip-list-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
 import PointModel from '../model/point-model.js';
 import PointPresenter from './point-presenter.js';
-import { sortPointsByDay, findSortingDuration } from '../util.js';
+import { sortPointsByDay, findSortingDuration, filter } from '../util.js';
 import { SortingType, UpdateType, UserAction } from '../const.js';
 
 
@@ -20,25 +20,32 @@ export default class TripPresenter {
   #sortingComponent;
   #currentSortingType = SortingType.PRICE;
   #sourcedPointsOrder = [];
+  #filterModel;
+  #filterType;
+  #noPointsComponent;
 
-  constructor ({ container, pointModel = new PointModel }) {
+  constructor ({ container, pointModel = new PointModel, filterModel }) {
     this.#container = container;
     this.#pointModel = pointModel;
-
+    this.#filterModel = filterModel;
     this.#pointModel.addObserver(this.#handleModelEvent);
   }
 
   get points () {
+    this.#filterType = this.#filterModel.filter;
+    const points = this.#pointModel.points;
+    const filteredPoints = filter[this.#filterType](points);
+
     switch (this.#currentSortingType) {
       case SortingType.DAY:
-        return [...this.#pointModel.points].sort(sortPointsByDay);
+        return filteredPoints.sort(sortPointsByDay);
       case SortingType.PRICE:
-        return [...this.#pointModel.points].sort((pointA, pointB) => pointA.basePrice - pointB.basePrice);
+        return filteredPoints.sort((pointA, pointB) => pointA.basePrice - pointB.basePrice);
       case SortingType.TIME:
-        return [...this.#pointModel.points].sort((pointA, pointB) => findSortingDuration(pointA) - findSortingDuration(pointB));
+        return filteredPoints.sort((pointA, pointB) => findSortingDuration(pointA) - findSortingDuration(pointB));
     }
 
-    return this.#pointModel.points;
+    return filteredPoints;
   }
 
   init () {
@@ -150,6 +157,12 @@ export default class TripPresenter {
     this.#pointPresenters.set(point.id, pointPresenter);
   }
 
+  #renderNoPointsComponent () {
+    this.#noPointsComponent = new ListEmptyView({
+      filterType: this.#filterType
+    });
+  }
+
   #renderList() {
     const points = this.points;
     this.#renderSorting();
@@ -172,6 +185,10 @@ export default class TripPresenter {
     this.#pointPresenters.clear();
 
     remove(this.#sortingComponent);
+
+    if (this.#noPointsComponent) {
+      remove(this.#noPointsComponent);
+    }
 
     if (resetSortingType) {
       this.#currentSortingType = SortingType.DAY;

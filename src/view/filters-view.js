@@ -1,33 +1,48 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { checkPastPoints, checkPresentPoints } from '../util.js';
+// import { checkPastPoints, checkPresentPoints } from '../util.js';
 
-const filtersTypes = ['Everything', 'Future', 'Present', 'Past'];
+// ${filterType === FilterType.PRESENT ? checkPresentPoints(points) : ''}
+// ${filterType === FilterType.PAST ? checkPastPoints(points) : ''}
 
-const createFilterElement = (filterType, points) => `
+const createFilterElement = (filterType, currentFilterType) => `
   <div class="trip-filters__filter">
-    <input id="filter-${filterType.toLowerCase()}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filterType.toLowerCase()}"
-    ${filterType === filtersTypes[0] ? 'checked' : ''}
-    ${filterType === 'Present' ? checkPresentPoints(points) : ''}
-    ${filterType === 'Past' ? checkPastPoints(points) : ''}>
-    <label class="trip-filters__filter-label" for="filter-${filterType.toLowerCase()}">${filterType}</label>
+    <input id="filter-${filterType.name.toLowerCase()}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filterType.name.toLowerCase()}"
+    ${filterType === currentFilterType ? 'checked' : ''}>
+
+    <label class="trip-filters__filter-label" for="filter-${filterType.name.toLowerCase()}">${filterType.name}</label>
   </div>`;
 
 
-const createFilterTemplate = (points) => `
+const createFilterTemplate = (filtersType, currentFilterType) => {
+  const filterItemsTemplate = filtersType.filters.map((filter) => createFilterElement(filter, currentFilterType)).join('');
+
+  return `
   <form class="trip-filters" action="#" method="get">
-    ${filtersTypes.map((filterType) => createFilterElement(filterType, points)).join('')}
+    ${filterItemsTemplate}
     <button class="visually-hidden" type="submit">Accept filter</button>
   </form>`;
+};
 
 export default class FiltersView extends AbstractView {
+  #currentFilter;
+  #handleFilterTypeChange;
+  #filters;
 
-  constructor (points) {
+  constructor (filters, currentFilterType, onFilterTypeChange) {
     super();
-    this.points = points;
+    this.#filters = filters;
+    this.#currentFilter = currentFilterType;
+    this.#handleFilterTypeChange = onFilterTypeChange;
+
+    this.element.addEventListener('change', this.#filterTypeChangeHandler);
   }
 
   get template () {
-
-    return createFilterTemplate(this.points);
+    return createFilterTemplate(this.#filters, this.#currentFilter);
   }
+
+  #filterTypeChangeHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFilterTypeChange(evt.target.value);
+  };
 }
