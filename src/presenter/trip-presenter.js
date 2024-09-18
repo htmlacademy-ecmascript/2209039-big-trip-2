@@ -1,5 +1,4 @@
 import { render, remove } from '../framework/render.js';
-// import CreateFormView from '../view/create-form-view.js';
 import SortingView from '../view/sorting-view.js';
 import TripListView from '../view/trip-list-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
@@ -29,6 +28,7 @@ export default class TripPresenter {
     this.#pointModel = pointModel;
     this.#filterModel = filterModel;
     this.#pointModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get points () {
@@ -50,18 +50,10 @@ export default class TripPresenter {
 
   init () {
     this.#pointModel.init();
-    // this.#points = this.#pointModel.points;
     this.#destinations = this.#pointModel.destinations;
     this.#offers = this.#pointModel.offers;
 
     this.#renderList();
-    // this.#sourcedPointsOrder = this.#pointModel.points;
-    // const defaultPoint = this.#pointModel.defaultPoint;
-
-
-    // render(new CreateFormView(defaultPoint[0], destinations, offers), this.#tripList.element);
-    // this.points.forEach((point) => this.#renderPoint(point, this.#destinations, this.#offers));
-
   }
 
   #handleModeChange = () => {
@@ -71,12 +63,6 @@ export default class TripPresenter {
   #handlePointChange = (updatedPoint) => {
     this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
   };
-
-  // #handleFavDataChange = (updatedPoint, destination = this.#destinations, offer = this.#offers) => {
-  //   this.points = updateItem(this.points, updatedPoint.points);
-  //   this.#sourcedPointsOrder = updateItem(this.#sourcedPointsOrder, updatedPoint.points);
-  //   this.#pointPresenters.get(updatedPoint.points.id).init(updatedPoint.points, destination, offer);
-  // };
 
   #sortPoints(sortingType) {
     switch (sortingType) {
@@ -133,8 +119,6 @@ export default class TripPresenter {
     this.#sortPoints(sortingType);
     this.#clearList();
     this.#renderList();
-
-    // this.points.forEach((point) => this.#renderPoint(point, this.#destinations, this.#offers));
   }
 
   #renderSorting() {
@@ -180,7 +164,7 @@ export default class TripPresenter {
     this.#pointPresenters.clear();
   }
 
-  #clearList({ resetSortingType = false }) {
+  #clearList({ resetSortingType = false } = {}) {
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
 

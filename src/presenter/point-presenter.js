@@ -106,7 +106,7 @@ export default class PointPresenter {
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
       UpdateType.MINOR,
-      {...this.#tripPoint, points: {...this.#tripPoint.points, isFavorite: !this.#tripPoint.points.isFavorite}});
+      {...this.#tripPoint.points, points: {...this.#tripPoint.points, isFavorite: !this.#tripPoint.points.isFavorite}}.points);
   };
 
   #handleFormSubmit = (update) => {
@@ -127,5 +127,3 @@ export default class PointPresenter {
     );
   };
 }
-
-
