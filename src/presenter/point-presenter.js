@@ -43,6 +43,9 @@ export default class PointPresenter {
         },
         onFormSubmit: (newPoint) => {
           this.#handleFormSubmit(newPoint);
+        },
+        onDeleteClick: () => {
+          this.#handleDeleteClick(point);
         }
 
       }
