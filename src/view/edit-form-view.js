@@ -89,7 +89,7 @@ const createEditFormTemplate = (point, destinations, offers) => {
               <div class="event__available-offers">
               ${offersByType.map((offer) => `
                 <div class="event__offer-selector">
-                  <input class="event__offer-checkbox  visually-hidden" id="${offer.title}" data-id=${offer.id}" type="checkbox" name="event-offer-luggage" ${point.offers.includes(offer.id) ? 'checked' : ''}>
+                  <input class="event__offer-checkbox  visually-hidden" id="${offer.title}" data-id=${offer.id} type="checkbox" name="event-offer-luggage" ${point.offers.includes(offer.id) ? 'checked' : ''}>
                     <label class="event__offer-label" for="${offer.title}">
                       <span class="event__offer-title">${offer.title}</span>
                       &plus;&euro;&nbsp;

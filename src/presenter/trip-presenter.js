@@ -18,7 +18,7 @@ export default class TripPresenter {
   #destinations;
   #offers;
   #sortingComponent;
-  #currentSortingType = SortingType.PRICE;
+  #currentSortingType = SortingType.DAY;
   #sourcedPointsOrder = [];
   #filterModel;
   #filterType;
@@ -67,7 +67,7 @@ export default class TripPresenter {
   }
 
   createPoint() {
-    this.#currentSortingType = SortingType.TIME;
+    this.#currentSortingType = SortingType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this.#newPointPresenter.init(this.#defaultPoint, this.#destinations, this.#offers);
   }
