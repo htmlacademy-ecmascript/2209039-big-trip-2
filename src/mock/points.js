@@ -38,6 +38,18 @@ export const points = [
     type: 'taxi'
   },
   {
+    id: 'f4b62099-293f-4c3d-a702-94eec4a2808g',
+    basePrice: 11300,
+    dateFrom: '2023-07-10T00:55:56.845Z',
+    dateTo: '2023-07-11T11:01:13.375Z',
+    destination: 'bfa5cb75-a1fe-4b77-a83c-0e528e910e04',
+    isFavorite: false,
+    offers: [
+      'b4c3e4e6-9053-42ce-b747-e281314baa31'
+    ],
+    type: 'sightseeing'
+  },
+  {
     id: 'f4b62099-293f-4c3d-a702-94eec4a2808f',
     basePrice: 11100,
     dateFrom: '2025-08-14T12:55:56.845Z',
@@ -46,12 +58,21 @@ export const points = [
     isFavorite: false,
     offers: [],
     type: 'flight'
+  },
+  {
+    id: 'f4b62099-293f-4c3d-a702-94eec4a2808h',
+    basePrice: 21100,
+    dateFrom: '2024-08-14T12:55:56.845Z',
+    dateTo: '2025-08-15T14:22:13.375Z',
+    destination: 'bfa5cb75-a1fe-4b77-a83c-0e528e910e06',
+    isFavorite: true,
+    offers: [],
+    type: 'ship'
   }];
 
 export const defaultPoint = [
   {
-    id: '000',
-    basePrice: '000',
+    basePrice: '0',
     dateFrom: '2001-01-01T00:00:00.845Z',
     dateTo: '2001-01-01T00:00:00.845Z',
     destination: '',

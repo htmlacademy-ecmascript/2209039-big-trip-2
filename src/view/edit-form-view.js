@@ -2,6 +2,7 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { capitalize, humanizeDueDate} from '../util.js';
 import { EventType } from '../const.js';
 import flatpickr from 'flatpickr';
+import he from 'he';
 
 import 'flatpickr/dist/flatpickr.min.css';
 
@@ -53,7 +54,7 @@ const createEditFormTemplate = (point, destinations, offers) => {
           <label class="event__label  event__type-output" for="event-destination-1">
             ${capitalize(type)}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${pointDestination.name}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${pointDestination.name}" list="destination-list-1" required>
             <datalist id="destination-list-1">
             ${destinations.map((dest) => `<option value="${dest.name}"></option>`).join('')}
             </datalist>
@@ -72,7 +73,7 @@ const createEditFormTemplate = (point, destinations, offers) => {
                 <span class="visually-hidden">Price</span>
                 &euro;
               </label>
-              <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
+              <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${he.encode(basePrice.toString())}">
             </div>
 
             <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -88,8 +89,8 @@ const createEditFormTemplate = (point, destinations, offers) => {
               <div class="event__available-offers">
               ${offersByType.map((offer) => `
                 <div class="event__offer-selector">
-                  <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${offer.title}" type="checkbox" name="event-offer-luggage" ${point.offers.includes(offer.id) ? 'checked' : ''}>
-                    <label class="event__offer-label" for="event-offer-luggage-${offer.title}">
+                  <input class="event__offer-checkbox  visually-hidden" id="${offer.title}" data-id=${offer.id} type="checkbox" name="event-offer-luggage" ${point.offers.includes(offer.id) ? 'checked' : ''}>
+                    <label class="event__offer-label" for="${offer.title}">
                       <span class="event__offer-title">${offer.title}</span>
                       &plus;&euro;&nbsp;
                       <span class="event__offer-price">${offer.price}</span>
@@ -114,8 +115,9 @@ export default class EditFormView extends AbstractStatefulView {
   #destinations;
   #datepickerFrom;
   #datepickerTo;
+  #handleDeleteClick;
 
-  constructor(points, destinations, offers, { onEditClick, onFormSubmit }) {
+  constructor(points, destinations, offers, { onEditClick, onFormSubmit, onDeleteClick }) {
     super();
     this.points = points;
     this._setState(EditFormView.parsePointToState(points));
@@ -124,6 +126,7 @@ export default class EditFormView extends AbstractStatefulView {
     this.#handleFormSubmit = onFormSubmit;
     this.#handleClick = onEditClick;
     this._restoreHandlers();
+    this.#handleDeleteClick = onDeleteClick;
   }
 
   get template() {
@@ -131,6 +134,8 @@ export default class EditFormView extends AbstractStatefulView {
   }
 
   _restoreHandlers() {
+    this.element.querySelector('form').
+      addEventListener('submit', this.#offersChangeHandler);
     this.element.querySelector('.event__type-group')
       .addEventListener('change', this.#eventTypeHandler);
     this.element.querySelector('.event__rollup-btn')
@@ -139,6 +144,10 @@ export default class EditFormView extends AbstractStatefulView {
       .addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__input--destination')
       .addEventListener('change', this.#destinationChangeHandler);
+    this.element.querySelector('.event__reset-btn')
+      .addEventListener('click', this.#deletePointHandler);
+    this.element.querySelector('.event__input--price').
+      addEventListener('change', this.#basePriceChangeHandler);
 
     this.#setDatepicker();
   }
@@ -175,6 +184,7 @@ export default class EditFormView extends AbstractStatefulView {
         time_24hr: true,
         /* eslint-enable */
         defaultDate: this._state.dateFrom,
+        maxDate: this._state.dateTo,
         onChange: this.#dateFromChangeHandler
       }
     );
@@ -216,6 +226,19 @@ export default class EditFormView extends AbstractStatefulView {
     });
   };
 
+  #basePriceChangeHandler = () => {
+    this.updateElement({
+      basePrice: this.element.querySelector('.event__input--price').value
+    });
+  };
+
+  #offersChangeHandler = () => {
+    const offerIds = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked')).map((el) => el.dataset.id);
+    this.updateElement({
+      offers: [...offerIds]
+    });
+  };
+
   removeElement() {
     super.removeElement();
 
@@ -230,4 +253,9 @@ export default class EditFormView extends AbstractStatefulView {
       EditFormView.parsePointToState(point)
     );
   }
+
+  #deletePointHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleDeleteClick(EditFormView.parseStateToPoint(this._state));
+  };
 }

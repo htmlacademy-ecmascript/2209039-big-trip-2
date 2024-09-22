@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import lodash from 'lodash';
+import { FilterType } from './const.js';
 
 const humanizeDueDate = (dueDate, dateFormat) => dueDate ? dayjs(dueDate).format(dateFormat) : '';
 
@@ -27,6 +28,13 @@ const findDuration = (point) => {
 const checkPastPoints = (points) => {
   const dates = points.map((point) => point.dateTo);
   if (dates.some((date) => dayjs(date).diff(dayjs() < 0))) {
+    return 'disabled';
+  }
+};
+
+const checkFuturePoints = (points) => {
+  const dates = points.map((point) => point.dateFrom);
+  if (dates.some((date) => dayjs(date) < dayjs())) {
     return 'disabled';
   }
 };
@@ -64,4 +72,14 @@ const sortPointsByDay = (pointA, pointB) => {
   return weight ?? dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom));
 };
 
-export { humanizeDueDate, capitalize, findDuration, toCamelCase, checkPastPoints, checkPresentPoints, updateItem, sortPointsByDay, findSortingDuration };
+const isDateEqual = (dateA, dateB) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
+
+const filter = {
+  [FilterType.EVERYTHING]: (points) => points,
+  [FilterType.FUTURE]: (points) => points.filter((point) => dayjs(point.dateFrom) > (dayjs())),
+  [FilterType.PAST]: (points) => points.filter((point) => dayjs(point.dateTo) < dayjs()),
+  [FilterType.PRESENT]: (points) => points.filter((point) => dayjs(point.dateFrom) < dayjs() && dayjs(point.dateTo) > dayjs())
+};
+
+export { humanizeDueDate, capitalize, findDuration, toCamelCase, checkPastPoints, checkPresentPoints, checkFuturePoints,
+  updateItem, sortPointsByDay, findSortingDuration, isDateEqual, filter };

@@ -1,6 +1,8 @@
 import { render, replace, remove } from '../framework/render.js';
 import EditFormView from '../view/edit-form-view.js';
 import TripPointView from '../view/trip-point-view.js';
+import { UserAction, UpdateType } from '../const.js';
+import { isDateEqual } from '../util.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -11,13 +13,13 @@ export default class PointPresenter {
   #tripPoint = null;
   #editTripForm = null;
   #tripList;
-  #handleStatusChange;
+  #handleDataChange;
   #handleModeChange;
   #mode = Mode.DEFAULT;
 
-  constructor({tripList, onStatusChange, onModeChange}){
+  constructor({tripList, onDataChange, onModeChange}){
     this.#tripList = tripList;
-    this.#handleStatusChange = onStatusChange;
+    this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
   }
 
@@ -39,8 +41,11 @@ export default class PointPresenter {
         onEditClick: () => {
           this.#replaceFormToPoint();
         },
-        onFormSubmit: () => {
-          this.#replaceFormToPoint();
+        onFormSubmit: (newPoint) => {
+          this.#handleFormSubmit(newPoint);
+        },
+        onDeleteClick: () => {
+          this.#handleDeleteClick(point);
         }
 
       }
@@ -58,6 +63,7 @@ export default class PointPresenter {
 
     if(this.#mode === Mode.EDITING) {
       replace(this.#tripPoint, prevEditTripForm);
+      this.#mode = Mode.DEFAULT;
       return;
     }
 
@@ -100,8 +106,27 @@ export default class PointPresenter {
   }
 
   #handleFavoriteClick = () => {
-    this.#handleStatusChange({...this.#tripPoint, points: {...this.#tripPoint.points, isFavorite: !this.#tripPoint.points.isFavorite}});
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      {...this.#tripPoint.points, points: {...this.#tripPoint.points, isFavorite: !this.#tripPoint.points.isFavorite}}.points);
+  };
+
+  #handleFormSubmit = (update) => {
+    const isMinorUpdate = !isDateEqual(this.#tripPoint.dateFrom);
+
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
+      update
+    );
+  };
+
+  #handleDeleteClick = (point) => {
+    this.#handleDataChange(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point
+    );
   };
 }
-
-

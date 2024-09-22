@@ -18,18 +18,25 @@ const createSortingTemplate = () => `
 
 export default class SortingView extends AbstractView{
   #handleSortTypeChange;
+  #currentSoringType;
 
-  constructor ({onSortTypeChange}) {
+  constructor ({currentSoringType, onSortTypeChange}) {
     super();
     this.#handleSortTypeChange = onSortTypeChange;
     this.element.addEventListener('change', this.#sortTypeChangeHandler);
+    this.#currentSoringType = currentSoringType;
   }
 
   get template () {
     return createSortingTemplate();
   }
 
+  #checkChosenAttribute(currentElement) {
+    currentElement.setAttribute('checked', '');
+  }
+
   #sortTypeChangeHandler = (evt) => {
     this.#handleSortTypeChange(evt.target.dataset.sortType);
+    evt.target.setAttribute('checked', '');
   };
 }
