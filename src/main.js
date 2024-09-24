@@ -25,4 +25,5 @@ const filterPresenter = new FilterPresenter({ filtersContainer, filterModel, poi
 tripInfoPresenter.initInfo();
 filterPresenter.init();
 tripSectionPresenter.init();
-pointsModel.init();
+pointsModel.init().
+  finally(() => tripSectionPresenter.createPoint());
