@@ -2,7 +2,7 @@ import TripPresenter from './presenter/trip-presenter.js';
 import HeaderPresenter from './presenter/header-presenter.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import FilterModel from './model/filter-model.js';
-import PointModel from './model/point-model.js';
+import PointsModel from './model/points-model.js';
 import PointApiService from './point-api-service.js';
 
 const AUTHORIZATION = 'Basic eo2w590ikq9889h';
@@ -13,7 +13,7 @@ const headerContainer = document.querySelector('.trip-main');
 const filtersContainer = document.querySelector('.trip-controls__filters');
 
 const filterModel = new FilterModel();
-const pointsModel = new PointModel({
+const pointsModel = new PointsModel({
   pointApiService: new PointApiService(END_POINT, AUTHORIZATION)
 });
 
@@ -25,3 +25,4 @@ const filterPresenter = new FilterPresenter({ filtersContainer, filterModel, poi
 tripInfoPresenter.initInfo();
 filterPresenter.init();
 tripSectionPresenter.init();
+pointsModel.init();

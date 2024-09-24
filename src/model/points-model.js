@@ -1,7 +1,7 @@
 import Observable from '../framework/observable.js';
 import { UpdateType } from '../const.js';
 
-export default class PointModel extends Observable {
+export default class PointsModel extends Observable {
   #pointApiService = null;
   #points = [];
   #destinations = [];
@@ -53,7 +53,9 @@ export default class PointModel extends Observable {
 
     try {
       const response = await this.#pointApiService.updatedPoint(update);
+      console.log(response);
       const updatedPoint = this.#adaptToCLient(response);
+      console.log(updatedPoint);
 
       this.#points = [
         ...this.#points.slice(0, index),

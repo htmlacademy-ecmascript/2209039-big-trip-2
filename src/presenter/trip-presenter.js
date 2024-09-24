@@ -37,12 +37,14 @@ export default class TripPresenter {
       tripList: this.#tripList,
       onDataChange: this.#handleViewAction,
     });
-
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get points () {
+    this.#destinations = this.#pointsModel.destinations;
+    this.#offers = this.#pointsModel.offers;
+    this.#defaultPoint = this.#pointsModel.defaultPoint[0];
     this.#filterType = this.#filterModel.filter;
     const points = this.#pointsModel.points;
     const filteredPoints = filter[this.#filterType](points);
@@ -60,12 +62,8 @@ export default class TripPresenter {
   }
 
   init () {
-    this.#pointsModel.init();
-    this.#destinations = this.#pointsModel.destinations;
-    this.#offers = this.#pointsModel.offers;
-    this.#defaultPoint = this.#pointsModel.defaultPoint[0];
-
     this.#renderList();
+    // this.#createPoint();
   }
 
   #createPoint() {
@@ -131,6 +129,7 @@ export default class TripPresenter {
         this.#isLoading = false;
         remove(this.#loadingComponent);
         this.#renderList();
+        break;
     }
   };
 
@@ -182,7 +181,6 @@ export default class TripPresenter {
     }
 
     this.#renderSorting();
-    this.#createPoint();
     render(this.#tripList, this.#container);
     if (this.points.length === 0) {
       return render(new ListEmptyView({
