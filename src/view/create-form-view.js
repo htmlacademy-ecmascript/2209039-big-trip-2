@@ -39,7 +39,7 @@ const findDestination = (point, destinations) => {
 };
 
 const createFormTemplate = (point, destinations, offers) => {
-  const { basePrice, dateFrom, dateTo, type } = point;
+  const { basePrice, dateFrom, dateTo, type, isDisabled, isSaving } = point;
   const offersByType = offers.find((offer) => offer.type === point.type).offers;
   const pointDestination = findDestination(point, destinations);
 
@@ -77,10 +77,10 @@ const createFormTemplate = (point, destinations, offers) => {
 
         <div class="event__field-group  event__field-group--time">
           <label class="visually-hidden" for="event-start-time-1">From</label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${humanizeDueDate(dateFrom, dateFormat.FULL_DATE)}">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${humanizeDueDate(dateFrom, dateFormat.FULL_DATE)}" required>
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${humanizeDueDate(dateTo, dateFormat.FULL_DATE)}">
+            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${humanizeDueDate(dateTo, dateFormat.FULL_DATE)}" required>
             </div>
 
             <div class="event__field-group  event__field-group--price">
@@ -91,7 +91,7 @@ const createFormTemplate = (point, destinations, offers) => {
               <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${he.encode(basePrice.toString())}">
             </div>
 
-            <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
+            <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
             <button class="event__reset-btn" type="reset">Cancel</button>
           </header>
           <section class="event__details">
@@ -199,7 +199,8 @@ export default class CreateFormView extends AbstractStatefulView {
         /* eslint-enable */
         defaultDate: this._state.dateFrom,
         maxDate: this._state.dateTo,
-        onChange: this.#dateFromChangeHandler
+        onChange: this.#dateFromChangeHandler,
+
       }
     );
 
@@ -219,11 +220,17 @@ export default class CreateFormView extends AbstractStatefulView {
   }
 
   static parsePointToState(point) {
-    return {...point};
+    return {...point,
+      isDisabled: false,
+      isSaving: false,
+    };
   }
 
   static parseStateToPoint(state) {
     const point = {...state};
+
+    delete point.isDisabled;
+    delete point.isSaving;
 
     return point;
   }
@@ -260,6 +267,11 @@ export default class CreateFormView extends AbstractStatefulView {
       this.#datepickerFrom.destroy();
       this.#datepickerFrom = null;
     }
+
+    if(this.#datepickerTo) {
+      this.#datepickerTo.destroy();
+      this.#datepickerTo = null;
+    }
   }
 
   reset(point) {
@@ -271,5 +283,6 @@ export default class CreateFormView extends AbstractStatefulView {
   #deletePointHandler = (evt) => {
     evt.preventDefault();
     this.#handleDeleteClick(CreateFormView.parseStateToPoint(this._state));
+    this.#newEventBtn.disabled = false;
   };
 }

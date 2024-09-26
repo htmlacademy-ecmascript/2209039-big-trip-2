@@ -45,14 +45,31 @@ export default class NewPointPresenter {
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
+  setSaving() {
+    this.#createTripForm.updateElement({
+      isDisabled: true,
+      isSaving: true
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this.#createTripForm.updateElement({
+        isDisabled: false,
+        isSaving: false,
+      });
+    };
+
+
+    this.#createTripForm.shake(resetFormState);
+  }
+
   #handleFormSubmit = (point) => {
     this.#handleDataChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      {id: `test${Math.random().toString()}`, ...point}
+      point
     );
-
-    this.destroy();
   };
 
   #handleDeleteClick = () => {

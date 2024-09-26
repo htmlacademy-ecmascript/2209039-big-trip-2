@@ -1,7 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
 const Messages = {
-  ERROR: 'Something went wrong. We\'re on it right now',
   EVERYTHING: 'Click New Event to create your first point',
   FUTURE: 'There are no past events now',
   PRESENT: 'There are no present events now',
@@ -9,7 +8,7 @@ const Messages = {
 };
 
 const createEmptyListMessageTemplate = (filterType) => {
-  const message = Messages[filterType];
+  const message = Messages[filterType.toUpperCase()];
 
   return `<p class="trip-events__msg">${message}</p>`;
 };

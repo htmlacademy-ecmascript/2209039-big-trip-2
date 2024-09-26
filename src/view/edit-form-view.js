@@ -22,7 +22,7 @@ const createPictures = (destination) => {
 };
 
 const createEditFormTemplate = (point, destinations, offers) => {
-  const { basePrice, dateFrom, dateTo, type } = point;
+  const { basePrice, dateFrom, dateTo, type, isDisabled, isDeleting, isSaving } = point;
   const offersByType = offers.find((offer) => offer.type === type).offers;
   const pointDestination = destinations.find((destination) => destination.id === point.destination);
   const destinationDescription = destinations.find((destination) => destination.id === point.destination).description;
@@ -76,8 +76,8 @@ const createEditFormTemplate = (point, destinations, offers) => {
               <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${he.encode(basePrice.toString())}">
             </div>
 
-            <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-            <button class="event__reset-btn" type="reset">Delete</button>
+            <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
+            <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isDeleting ? 'Deleting' : 'Delete'}</button>
             <button class="event__rollup-btn" type="button">
               <span class="visually-hidden">Open event</span>
             </button>
@@ -184,6 +184,7 @@ export default class EditFormView extends AbstractStatefulView {
         time_24hr: true,
         /* eslint-enable */
         defaultDate: this._state.dateFrom,
+        minDate: new Date(),
         maxDate: this._state.dateTo,
         onChange: this.#dateFromChangeHandler
       }
@@ -205,11 +206,19 @@ export default class EditFormView extends AbstractStatefulView {
   }
 
   static parsePointToState(point) {
-    return {...point};
+    return {...point,
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false
+    };
   }
 
   static parseStateToPoint(state) {
     const point = {...state};
+
+    delete point.isDisabled;
+    delete point.isSaving;
+    delete point.isDeleting;
 
     return point;
   }
@@ -245,6 +254,11 @@ export default class EditFormView extends AbstractStatefulView {
     if(this.#datepickerFrom) {
       this.#datepickerFrom.destroy();
       this.#datepickerFrom = null;
+    }
+
+    if(this.#datepickerTo) {
+      this.#datepickerTo.destroy();
+      this.#datepickerTo = null;
     }
   }
 

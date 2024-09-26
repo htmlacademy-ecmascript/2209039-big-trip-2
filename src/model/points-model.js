@@ -6,7 +6,15 @@ export default class PointsModel extends Observable {
   #points = [];
   #destinations = [];
   #offers = [];
-  #defaultPoint = [];
+  #defaultPoint = {
+    basePrice: 0,
+    dateFrom: '',
+    dateTo: '',
+    destination: '',
+    isFavorite: false,
+    offers: [],
+    type: 'flight'
+  };
 
   constructor({pointApiService}) {
     super();
@@ -67,28 +75,37 @@ export default class PointsModel extends Observable {
     }
   }
 
-  addPoint(updateType, update) {
-    this.#points = [
-      update,
-      ...this.#points
-    ];
-
-    this._notify(updateType, update);
+  async addPoint(updateType, update) {
+    try {
+      const response = await this.#pointApiService.addPoint(update);
+      const newPoint = this.#adaptToCLient(response);
+      this.#points = [
+        newPoint,
+        ...this.#points
+      ];
+      this._notify(updateType, newPoint);
+    } catch (err) {
+      throw new Error(err);
+    }
   }
 
-  deleteTask(updateType, update) {
+  async deletePoint(updateType, update) {
     const index = this.#points.findIndex((point) => point.id === update.id);
 
     if (index === -1) {
       throw new Error ('Can\'t delete unexisting point');
     }
 
-    this.#points = [
-      ...this.#points.slice(0, index),
-      ...this.#points.slice(index + 1)
-    ];
-
-    this._notify(updateType);
+    try {
+      await this.#pointApiService.deletePoint(update);
+      this.#points = [
+        ...this.#points.slice(0, index),
+        ...this.#points.slice(index + 1)
+      ];
+      this._notify(updateType);
+    } catch (err) {
+      throw new Error(err);
+    }
   }
 
   #adaptToCLient(point) {
