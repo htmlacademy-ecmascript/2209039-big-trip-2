@@ -5,7 +5,7 @@ import FilterModel from './model/filter-model.js';
 import PointsModel from './model/points-model.js';
 import PointApiService from './point-api-service.js';
 
-const AUTHORIZATION = 'Basic eo2w590ikq9889h';
+const AUTHORIZATION = 'Basic eo2w590ikq97389h';
 const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
 
 const tripSection = document.querySelector('.trip-events');

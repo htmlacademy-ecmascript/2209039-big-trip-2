@@ -105,6 +105,41 @@ export default class PointPresenter {
     }
   }
 
+  setAborting() {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#tripPoint.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#editTripForm.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    this.#editTripForm.shake(resetFormState);
+  }
+
+  setSaving() {
+    if (this.#mode === Mode.EDITING) {
+      this.#editTripForm.updateElement({
+        isDisabled: true,
+        isSaving: true
+      });
+    }
+  }
+
+  setDeleting() {
+    if (this.#mode === Mode.EDITING) {
+      this.#editTripForm.updateElement({
+        isDisabled: true,
+        isDeleting: true
+      });
+    }
+  }
+
   #handleFavoriteClick = () => {
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
