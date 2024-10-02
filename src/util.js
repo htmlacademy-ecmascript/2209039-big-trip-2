@@ -2,6 +2,8 @@ import dayjs from 'dayjs';
 import lodash from 'lodash';
 import { FilterType } from './const.js';
 
+const MINUTES_IN_HOUR = 60;
+
 const humanizeDueDate = (dueDate, dateFormat) => dueDate ? dayjs(dueDate).format(dateFormat) : '';
 
 const capitalize = (str) => str[0].toUpperCase() + str.slice(1);
@@ -10,16 +12,16 @@ const findSortingDuration = (point) => dayjs(point.dateTo).diff(dayjs(point.date
 
 const findDuration = (point) => {
   let minutesDuration = findSortingDuration(point);
-  const minutesAfterHours = minutesDuration % 60;
+  const minutesAfterHours = minutesDuration % MINUTES_IN_HOUR;
 
-  if (minutesDuration >= 60 && minutesAfterHours !== 0) {
-    minutesDuration /= 60;
+  if (minutesDuration >= MINUTES_IN_HOUR && minutesAfterHours !== 0) {
+    minutesDuration /= MINUTES_IN_HOUR;
 
     return `${Math.floor(minutesDuration)}H ${minutesAfterHours}M`;
   }
 
-  if (minutesDuration >= 60) {
-    minutesDuration /= 60;
+  if (minutesDuration >= MINUTES_IN_HOUR) {
+    minutesDuration /= MINUTES_IN_HOUR;
   }
 
   return `${Math.floor(minutesDuration)}H`;
@@ -27,20 +29,20 @@ const findDuration = (point) => {
 
 const checkPastPoints = (points) => {
   const dates = points.map((point) => point.dateTo);
-  if (dates.some((date) => dayjs(date).diff(dayjs() < 0))) {
+  if (dates.every((date) => dayjs(date).diff(dayjs() < 0))) {
     return 'disabled';
   }
 };
 
 const checkFuturePoints = (points) => {
   const dates = points.map((point) => point.dateFrom);
-  if (dates.some((date) => dayjs(date) < dayjs())) {
+  if (dates.every((date) => dayjs(date) < dayjs())) {
     return 'disabled';
   }
 };
 
 const checkPresentPoints = (points) => {
-  if (!(points.some((point) => (dayjs(point.dateFrom).isBefore(dayjs()) &&
+  if (!(points.every((point) => (dayjs(point.dateFrom).isBefore(dayjs()) &&
   dayjs(point.dateTo).isAfter(dayjs()))))) {
     return 'disabled';
   }

@@ -31,7 +31,7 @@ export default class PointPresenter {
       {
         onEditClick: () => {
           this.#replacePointToForm();
-          document.addEventListener('keydown', this.#escKeyDownHanlder);
+          document.addEventListener('keydown', this.#escKeyDownHandler);
         },
         onFavoriteClick: this.#handleFavoriteClick }
     );
@@ -73,7 +73,7 @@ export default class PointPresenter {
     render(this.#tripPoint, this.#tripList.element);
   }
 
-  #escKeyDownHanlder = (evt) => {
+  #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
       this.#replaceFormToPoint();
@@ -82,14 +82,14 @@ export default class PointPresenter {
 
   #replacePointToForm() {
     replace(this.#editTripForm, this.#tripPoint);
-    document.addEventListener('keydown', this.#escKeyDownHanlder);
+    document.addEventListener('keydown', this.#escKeyDownHandler);
     this.#handleModeChange();
     this.#mode = Mode.EDITING;
   }
 
   #replaceFormToPoint(point = this.#tripPoint) {
     replace(point, this.#editTripForm);
-    document.removeEventListener('keydown', this.#escKeyDownHanlder);
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = Mode.DEFAULT;
   }
 
