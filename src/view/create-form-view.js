@@ -24,7 +24,7 @@ const createPictures = (destination) => {
   }
 };
 
-const destinationDescription = (point, destinations) => {
+const findDestinationDescription = (point, destinations) => {
   if (!destinations.find((destination) => destination.id === point.destination)) {
     return 'Choose your destiny';
   }
@@ -112,7 +112,7 @@ const createFormTemplate = (point, destinations, offers) => {
 
             <section class="event__section  event__section--destination">
               <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-              <p class="event__destination-description">${destinationDescription(point, destinations)}</p>
+              <p class="event__destination-description">${findDestinationDescription(point, destinations)}</p>
               ${createPictures(pointDestination)}
             </section>
           </section>
@@ -128,6 +128,7 @@ export default class CreateFormView extends AbstractStatefulView {
   #handleNewEventClick;
   #handleDeleteClick;
   #offers = null;
+  #form = null;
 
   constructor(points, destinations, offers, {onFormSubmit, onDeleteClick, onNewEventClick}) {
     super();
@@ -139,6 +140,7 @@ export default class CreateFormView extends AbstractStatefulView {
     this.#newEventBtn = document.querySelector('.trip-main__event-add-btn');
     this.#handleNewEventClick = onNewEventClick;
     this.#handleDeleteClick = onDeleteClick;
+    this.#form = this.element.querySelector('form');
     this._restoreHandlers();
   }
 
@@ -147,10 +149,9 @@ export default class CreateFormView extends AbstractStatefulView {
   }
 
   _restoreHandlers() {
-    this.element.querySelector('form').
-      addEventListener('submit', this.#offersChangeHandler);
-    this.element.querySelector('form').
-      addEventListener('submit', this.#formSubmitHandler);
+    this.#form = this.element.querySelector('form');
+    this.#form.addEventListener('submit', this.#formSubmitHandler);
+    this.#form.addEventListener('submit', this.#offersSaveHandler);
     this.element.querySelector('.event__type-group')
       .addEventListener('change', this.#eventTypeHandler);
     this.element.querySelector('.event__input--destination')
@@ -253,7 +254,7 @@ export default class CreateFormView extends AbstractStatefulView {
     });
   };
 
-  #offersChangeHandler = () => {
+  #offersSaveHandler = () => {
     const offerIds = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked')).map((el) => el.dataset.id);
     this.updateElement({
       offers: [...offerIds]

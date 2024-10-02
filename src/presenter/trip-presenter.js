@@ -23,7 +23,7 @@ export default class TripPresenter {
   #points;
   #destinations;
   #offers;
-  #sortingComponent;
+  #sortingComponent = null;
   #currentSortingType = SortingType.DAY;
   #sourcedPointsOrder = [];
   #filterModel;
@@ -167,7 +167,7 @@ export default class TripPresenter {
 
   #renderSorting() {
     this.#sortingComponent = new SortingView({
-      currentSoringType: this.#currentSortingType,
+      currentSortingType: this.#currentSortingType,
       onSortTypeChange: (sortingType) => this.#handleSortingTypeChange(sortingType),
     });
 
@@ -191,6 +191,10 @@ export default class TripPresenter {
   }
 
   #renderNoPointsComponent (points) {
+    if (this.#noPointsComponent) {
+      remove(this.#noPointsComponent);
+    }
+
     this.#noPointsComponent = new ListEmptyView({
       filterType: this.#filterType
     });
@@ -223,12 +227,9 @@ export default class TripPresenter {
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
 
+    remove(this.#noPointsComponent);
     remove(this.#sortingComponent);
     remove(this.#loadingComponent);
-
-    // if (this.#noPointsComponent) {
-    //   remove(this.#noPointsComponent);
-    // }
 
     if (resetSortingType) {
       this.#currentSortingType = SortingType.DAY;

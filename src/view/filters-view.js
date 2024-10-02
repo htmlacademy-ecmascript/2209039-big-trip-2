@@ -1,14 +1,10 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { checkPastPoints, checkPresentPoints, checkFuturePoints } from '../util.js';
 
 
-const createFilterElement = (filterType, currentFilterType, points) => `
+const createFilterElement = (filterType, currentFilterType) => `
   <div class="trip-filters__filter">
     <input id="filter-${filterType.name.toLowerCase()}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filterType.name.toLowerCase()}"
-    ${filterType.type === currentFilterType ? 'checked' : ''}
-    ${filterType.type === 'present' ? checkPresentPoints(points) : ''}
-    ${filterType.type === 'past' ? checkPastPoints(points) : ''}
-    ${filterType.type === 'future' ? checkFuturePoints(points) : ''}>
+    ${filterType.type === currentFilterType ? 'checked' : ''}>
     <label class="trip-filters__filter-label" for="filter-${filterType.name.toLowerCase()}">${filterType.name}</label>
   </div>`;
 

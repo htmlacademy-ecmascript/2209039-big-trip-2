@@ -15,7 +15,7 @@ const createPictures = (destination) => {
     return `
       <div class="event__photos-container">
         <div class="event__photos-tape">
-        ${destination.pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`)}
+        ${destination.pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`).join('')}
         </div>
       </div>`;
   }
@@ -25,7 +25,7 @@ const createEditFormTemplate = (point, destinations, offers) => {
   const { basePrice, dateFrom, dateTo, type, isDisabled, isDeleting, isSaving } = point;
   const offersByType = offers.find((offer) => offer.type === type).offers;
   const pointDestination = destinations.find((destination) => destination.id === point.destination);
-  const destinationDescription = destinations.find((destination) => destination.id === point.destination).description;
+  const findDestinationDescription = destinations.find((destination) => destination.id === point.destination).description;
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -101,7 +101,7 @@ const createEditFormTemplate = (point, destinations, offers) => {
 
             <section class="event__section  event__section--destination">
               <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-              <p class="event__destination-description">${destinationDescription}</p>
+              <p class="event__destination-description">${findDestinationDescription}</p>
               ${createPictures(pointDestination)}
             </section>
           </section>
@@ -116,6 +116,7 @@ export default class EditFormView extends AbstractStatefulView {
   #datepickerFrom;
   #datepickerTo;
   #handleDeleteClick;
+  #form = null;
 
   constructor(points, destinations, offers, { onEditClick, onFormSubmit, onDeleteClick }) {
     super();
@@ -125,8 +126,9 @@ export default class EditFormView extends AbstractStatefulView {
     this.offers = offers;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleClick = onEditClick;
-    this._restoreHandlers();
     this.#handleDeleteClick = onDeleteClick;
+    this.#form = this.element.querySelector('form');
+    this._restoreHandlers();
   }
 
   get template() {
@@ -134,14 +136,12 @@ export default class EditFormView extends AbstractStatefulView {
   }
 
   _restoreHandlers() {
-    this.element.querySelector('form').
-      addEventListener('submit', this.#offersChangeHandler);
+    this.#form.addEventListener('submit', this.#offersSaveHandler);
+    this.#form.addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__type-group')
       .addEventListener('change', this.#eventTypeHandler);
     this.element.querySelector('.event__rollup-btn')
       .addEventListener('click', this.#clickHandler);
-    this.element.querySelector('form')
-      .addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__input--destination')
       .addEventListener('change', this.#destinationChangeHandler);
     this.element.querySelector('.event__reset-btn')
@@ -241,7 +241,7 @@ export default class EditFormView extends AbstractStatefulView {
     });
   };
 
-  #offersChangeHandler = () => {
+  #offersSaveHandler = () => {
     const offerIds = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked')).map((el) => el.dataset.id);
     this.updateElement({
       offers: [...offerIds]
