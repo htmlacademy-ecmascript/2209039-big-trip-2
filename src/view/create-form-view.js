@@ -140,7 +140,6 @@ export default class CreateFormView extends AbstractStatefulView {
     this.#newEventBtn = document.querySelector('.trip-main__event-add-btn');
     this.#handleNewEventClick = onNewEventClick;
     this.#handleDeleteClick = onDeleteClick;
-    this.#form = this.element.querySelector('form');
     this._restoreHandlers();
   }
 
@@ -149,9 +148,8 @@ export default class CreateFormView extends AbstractStatefulView {
   }
 
   _restoreHandlers() {
-    this.#form = this.element.querySelector('form');
-    this.#form.addEventListener('submit', this.#formSubmitHandler);
-    this.#form.addEventListener('submit', this.#offersSaveHandler);
+    this.element.querySelector('form')
+      .addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__type-group')
       .addEventListener('change', this.#eventTypeHandler);
     this.element.querySelector('.event__input--destination')
@@ -167,6 +165,7 @@ export default class CreateFormView extends AbstractStatefulView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
+    this.#offersSaveHandler();
     this.#handleFormSubmit(CreateFormView.parseStateToPoint(this._state));
     this.#newEventBtn.disabled = false;
   };
@@ -243,9 +242,15 @@ export default class CreateFormView extends AbstractStatefulView {
   };
 
   #destinationChangeHandler = (evt) => {
-    this.updateElement({
-      destination: this.destinations.find((destination) => destination.name === evt.target.value).id
-    });
+    try {
+      this.updateElement({
+        destination: this.destinations.find((destination) => destination.name === evt.target.value).id
+      });
+    } catch (err) {
+      if (err instanceof TypeError) {
+        evt.target.focus();
+      }
+    }
   };
 
   #basePriceChangeHandler = () => {
